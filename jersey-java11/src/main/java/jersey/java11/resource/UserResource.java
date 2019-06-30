@@ -1,6 +1,7 @@
 package jersey.java11.resource;
 
 import com.google.cloud.Timestamp;
+import com.google.cloud.logging.LoggingHandler;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import jersey.java11.UserEntity;
@@ -18,6 +19,10 @@ import java.util.UUID;
 
 @Log
 public class UserResource {
+  static {
+    LoggingHandler.addHandler(log, new LoggingHandler());
+  }
+
   @AllArgsConstructor
   @Value
   static class UserView {
