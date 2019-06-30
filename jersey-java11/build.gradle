@@ -5,7 +5,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.google.cloud.tools:appengine-gradle-plugin:1.+'
-        classpath 'org.akhikhl.gretty:gretty:+'
         classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
     }
 }
@@ -21,15 +20,12 @@ repositories {
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
-// apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
 
 mainClassName = 'jersey.java11.Main'
 
 dependencies {
-    implementation 'com.google.appengine:appengine-api-1.0-sdk:+'
-//    providedCompile "javax.servlet:javax.servlet-api:3.1.+"
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation "org.glassfish.jersey.containers:jersey-container-servlet:2.28"
     implementation "org.glassfish.jersey.inject:jersey-hk2:2.28"
     implementation 'com.googlecode.objectify:objectify:6.0.4'
@@ -41,12 +37,6 @@ dependencies {
     implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.28'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
     implementation 'javax.activation:javax.activation-api:1.2.0'
-}
-
-gretty {
-    httpPort = 8080
-    contextPath = '/'
-    servletContainer = 'jetty9'  // What App Engine Flexible uses
 }
 
 appengine {
