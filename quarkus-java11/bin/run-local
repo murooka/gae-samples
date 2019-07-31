@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -ue
+
+export DATASTORE_USE_PROJECT_ID_AS_APP_ID=true
+$(CLOUDSDK_CORE_PROJECT=no-app-id gcloud beta emulators datastore env-init)
+./gradlew run
