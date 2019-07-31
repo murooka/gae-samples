@@ -1,7 +1,6 @@
 package jersey.java11.resource;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.logging.LoggingHandler;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import jersey.java11.UserEntity;
@@ -9,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,12 +16,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-@Log
+@Slf4j
 public class UserResource {
-  static {
-    LoggingHandler.addHandler(log, new LoggingHandler());
-  }
-
   @AllArgsConstructor
   @Value
   static class UserView {
