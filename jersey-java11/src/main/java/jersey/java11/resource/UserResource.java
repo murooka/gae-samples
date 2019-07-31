@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-@Log
+@Slf4j
 public class UserResource {
   @AllArgsConstructor
   @Value

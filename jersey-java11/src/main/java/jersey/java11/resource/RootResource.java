@@ -1,12 +1,13 @@
 package jersey.java11.resource;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Log
+@Slf4j
 @Path("/")
 public class RootResource {
   @GET
