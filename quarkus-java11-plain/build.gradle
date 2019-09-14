@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'io.quarkus.gradle.plugin'
+
+group 'quarkus-java11'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+        maven {
+            //this is temporary, all dependencies should be in central soon
+            url 'http://repository.jboss.org/nexus/content/groups/public'
+        }
+    }
+    dependencies {
+        classpath 'io.quarkus:quarkus-gradle-plugin:0.11.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://repository.jboss.org/nexus/content/groups/public'
+    }
+}
+
+dependencies {
+    implementation group: 'io.quarkus', name: 'quarkus-resteasy', version:'0.11.0'
+
+    testImplementation group: 'io.quarkus', name: 'quarkus-junit5', version:'0.11.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+}
