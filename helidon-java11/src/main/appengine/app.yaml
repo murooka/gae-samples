@@ -1,0 +1,4 @@
+service: helidon-java11
+runtime: java11
+instance_class: F1
+entrypoint: 'java -XX:MaxRAM=128m -XX:ActiveProcessorCount=2 -Xmx32m -jar helidon-java11-all.jar'
