@@ -37,7 +37,6 @@ public final class Main {
 
     private static Routing createRouting(Config config) {
         MetricsSupport metrics = MetricsSupport.create();
-        GreetService greetService = new GreetService(config);
         UserService userService = new UserService();
         HealthSupport health = HealthSupport.builder()
                 .addLiveness(HealthChecks.healthChecks())
@@ -47,7 +46,6 @@ public final class Main {
                 .register(JsonSupport.create())
                 .register(health)
                 .register(metrics)
-                .register("/greet", greetService)
                 .register("/users", userService)
                 .build();
     }

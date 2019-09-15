@@ -1,0 +1,7 @@
+runtime: java11
+service: helidon-native
+instance_class: F2
+entrypoint: './helidon-native'
+automatic_scaling:
+  max_concurrent_requests: 40
+
