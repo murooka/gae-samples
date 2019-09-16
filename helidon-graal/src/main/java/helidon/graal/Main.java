@@ -1,6 +1,5 @@
 package helidon.graal;
 
-import io.helidon.config.Config;
 import io.helidon.health.HealthSupport;
 import io.helidon.health.checks.HealthChecks;
 import io.helidon.media.jsonp.server.JsonSupport;
@@ -17,37 +16,40 @@ public final class Main {
     public static void main(final String[] args) throws IOException {
         setupLogging();
 
-        Config config = Config.create();
-        ServerConfiguration serverConfig =
-                ServerConfiguration.create(config.get("server"));
+        String envPort = System.getenv("PORT");
+        int port = envPort == null ? 8000 : Integer.parseInt(envPort);
 
-        WebServer server = WebServer.create(serverConfig, createRouting(config));
+        ServerConfiguration serverConfig = ServerConfiguration.builder()
+            .port(port)
+            .build();
+
+        WebServer server = WebServer.create(serverConfig, createRouting());
 
         server.start()
-                .thenAccept(ws -> {
-                    System.out.println("server is listening on http://localhost:" + ws.port());
-                    ws.whenShutdown().thenRun(() -> System.out.println("server will shutdown"));
-                })
-                .exceptionally(t -> {
-                    System.err.println("Startup failed: " + t.getMessage());
-                    t.printStackTrace(System.err);
-                    return null;
-                });
+            .thenAccept(ws -> {
+                System.out.println("server is listening on http://localhost:" + ws.port());
+                ws.whenShutdown().thenRun(() -> System.out.println("server will shutdown"));
+            })
+            .exceptionally(t -> {
+                System.err.println("Startup failed: " + t.getMessage());
+                t.printStackTrace(System.err);
+                return null;
+            });
     }
 
-    private static Routing createRouting(Config config) {
+    private static Routing createRouting() {
         MetricsSupport metrics = MetricsSupport.create();
-        UserService userService = new UserService();
+        MainService mainService = new MainService();
         HealthSupport health = HealthSupport.builder()
-                .addLiveness(HealthChecks.healthChecks())
-                .build();
+            .addLiveness(HealthChecks.healthChecks())
+            .build();
 
         return Routing.builder()
-                .register(JsonSupport.create())
-                .register(health)
-                .register(metrics)
-                .register("/users", userService)
-                .build();
+            .register(JsonSupport.create())
+            .register(health)
+            .register(metrics)
+            .register("/", mainService)
+            .build();
     }
 
     private static void setupLogging() throws IOException {

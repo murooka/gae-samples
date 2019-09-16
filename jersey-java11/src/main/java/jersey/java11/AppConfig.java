@@ -9,9 +9,7 @@ import javax.ws.rs.ApplicationPath;
 @ApplicationPath("/")
 public class AppConfig extends ResourceConfig {
   public AppConfig() {
-    this.register(ObjectifyFeature.class)
-        .register(StackdriverLoggingFeature.class)
-        .register(JacksonJaxbJsonProvider.class)
+    this.register(JacksonJaxbJsonProvider.class)
         .register(FallbackExceptionMapper.class)
         .register(RootResource.class);
   }

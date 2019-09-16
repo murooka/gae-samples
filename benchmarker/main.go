@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"sort"
-	"strings"
 	"syscall"
 	"time"
 
@@ -66,10 +64,12 @@ MAIN_LOOP:
 			log.Print(s)
 			switch s {
 			case syscall.SIGINT:
-				go func(origin string) {
-					worker(origin, quitCh, reportCh)
-				}(origin)
-				c++
+				for i := 0; i < c; i++ {
+					go func(origin string) {
+						worker(origin, quitCh, reportCh)
+					}(origin)
+				}
+				c *= 2
 				log.Printf("%d workers are running", c)
 			case syscall.SIGHUP, syscall.SIGTERM, syscall.SIGQUIT:
 				break MAIN_LOOP
@@ -175,43 +175,11 @@ func worker(origin string, quitCh chan struct{}, reportCh chan time.Duration) {
 // }
 
 func runScenario(origin string) {
-	user := taskUserPostCreate(origin)
-	if user == nil {
-		return
-	}
-
-	taskUserGetSelf(origin, user)
+	taskGetOK(origin)
 }
 
-func taskUserPostCreate(origin string) *User {
-	res, err := http.Post(origin+"/users", "application/json", strings.NewReader(`{"name":"aaa"}`))
-	if err != nil {
-		log.Printf("got error: %s", err)
-		return nil
-	}
-
-	if res.StatusCode >= 400 {
-		log.Printf("got unexpected status code: %d", res.StatusCode)
-		return nil
-	}
-
-	u := User{}
-	err = json.NewDecoder(res.Body).Decode(&u)
-	if err != nil {
-		log.Printf("failed to parse response: %s", err)
-		return nil
-	}
-
-	if u.ID == "" || u.Name == "" {
-		log.Printf("assertion error: user = %#v", u)
-		return nil
-	}
-
-	return &u
-}
-
-func taskUserGetSelf(origin string, want *User) {
-	res, err := http.Get(origin + "/users/" + want.ID)
+func taskGetOK(origin string) {
+	res, err := http.Get(origin + "/ok")
 	if err != nil {
 		log.Printf("got error: %s", err)
 		return
@@ -219,18 +187,6 @@ func taskUserGetSelf(origin string, want *User) {
 
 	if res.StatusCode != 200 {
 		log.Printf("got unexpected status code: %d", res.StatusCode)
-		return
-	}
-
-	u := User{}
-	err = json.NewDecoder(res.Body).Decode(&u)
-	if err != nil {
-		log.Printf("failed to parse response: %s", err)
-		return
-	}
-
-	if u.ID != want.ID || u.Name != want.Name {
-		log.Printf("assertion error")
 		return
 	}
 }

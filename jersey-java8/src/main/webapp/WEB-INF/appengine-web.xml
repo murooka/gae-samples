@@ -5,7 +5,4 @@
     <service>jersey-java8</service>
     <threadsafe>true</threadsafe>
     <instance-class>F2</instance-class>
-    <automatic-scaling>
-        <max-concurrent-requests>40</max-concurrent-requests>
-    </automatic-scaling>
 </appengine-web-app>
